@@ -1,0 +1,17 @@
+{
+  "name": "photuprint",
+  "version": "1.0.0",
+  "description": "Photuprint Backend and frontend development",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Photuprint",
+    "backend",
+    "Personalised",
+    "Products"
+  ],
+  "author": "Photuprint.com",
+  "license": "ISC"
+}
