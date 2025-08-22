@@ -1,0 +1,591 @@
+.containerStyle {
+    min-height: 100vh;
+    background: #f5f5f5;
+    display: flex;                /* Make it flexbox */
+    justify-content: center;      /* Horizontal center */
+    align-items: center;          /* Vertical center */
+}
+
+.formStyle {
+    background: white;
+    padding: 25px 60px 43px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    width: 100%;    
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+.inputStyle {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  .buttonStyle {
+    width: 100%;
+    padding: 12px;
+    background: #007bff;
+    color: white;
+    font-weight:500;
+    font-size:16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    opacity: 1;
+    margin-top:10px;
+  }
+
+.errorStyle {
+    color: red;
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  .logoStyle {
+    width: 185px;
+  }
+  
+  .textLogo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #007bff;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    letter-spacing: 1px;
+  }
+  
+  .logoutButtonStyle {
+    color:#007bff;    
+  }
+  .borderRight1px {
+    border-right:1px solid #d8d8d8;
+  }
+  .contentContainer {
+    flex:1;
+    padding:16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  .footerWrapper {
+    margin-top: 30px;
+    padding: 20px;
+    background: #e9ecef; 
+    text-align: center;
+  }
+  .gridStyle {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  };
+
+.container {
+    display: grid;
+    width:96%;
+    margin: 0 auto;
+    gap: 1.8rem;
+    grid-template-columns: 14rem auto 23rem;
+}
+
+.dashboardLayout {
+    display: grid;
+    /* grid-template-columns: 250px 1fr; */
+    height: 100vh;
+  }
+  
+  .rightContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    padding-left:237px;
+  }
+  
+  .headerWrapper {
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #fff;
+    padding:16px 20px;
+    display: flex;
+    justify-content: right;
+  }
+  
+  .footerWrapper {
+    flex-shrink: 0;
+    position: sticky;
+    bottom: 0;
+    z-index: 100;
+    background: #fff;
+    border-top: 1px solid #ddd;
+  }
+  
+  .contentWrapper {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    background: #f9f9f9;
+  }
+  
+
+/* Sidebar Container */
+.sidebarContainer {
+    height: 100vh;
+    background: #f9f9f9;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
+    border-right:1px solid #d8d8d8
+  }
+  
+  /* Top Section */
+  .sidebarContainer .top {
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .83rem;
+    border-bottom: 1px solid #d8d8d8;
+    position: fixed;
+    width:100%;
+  }
+  
+  .sidebarContainer .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding-left:10px;
+  }
+  
+  .sidebarContainer .logo img {
+    width: 9rem;
+    height: 1.7rem;
+  }
+  
+  .sidebarContainer .close {
+    display: none; /* can be used for mobile toggle */
+    cursor: pointer;
+  }
+  
+  /* Sidebar Links */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+    height: 100%;
+    margin-top:55px;
+  }
+  
+  .sidebar a {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    color: gray;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: all 300ms ease;
+    border-left: 4px solid transparent;
+    border-bottom:1px solid #d8d8d8;
+  }
+  
+  .sidebar a h3 {
+    font-weight: 500;
+    margin: 0;
+  }
+  
+  .sidebar a span {
+    font-size: .8rem;
+    transition: margin-left 300ms ease;
+  }
+  
+  /* Hover + Active States */
+  .sidebar a:hover {
+    background: #eee;
+    color: #000;
+  }
+  
+  .sidebar a:hover span {
+    margin-left: 0.2rem;
+  }
+  
+  .sidebar a.active {
+    background: #ddd;
+    color: #000;
+    border-left: 4px solid #cc0;
+  }
+  
+  .sidebar a.active span {
+    color: #000000;
+    font-weight:500;
+  }
+  
+  .sidebar a:last-child {
+    /* margin-top: auto; */
+    margin-bottom: 1rem;
+  }
+  .sidebar .message-count {
+    background: red;
+    color: white;
+    padding: 2px 8px;
+    font-size: 11px;
+    border-radius: 4px;
+    margin-left: auto;
+  }
+
+  input {
+    border:1px solid #d8d8d8;
+    padding:10px;
+  }
+
+/* Brand Manager Styles - Only additional styles not in base.css */
+.brandHeader {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+}
+
+/* Success/Error Messages */
+.successMessage, .errorMessage {
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
+  animation: slideIn 0.3s ease-out;
+}
+
+.successMessage {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.errorMessage {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.successIcon, .errorIcon {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Form Styles */
+.brandFormContainer {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+}
+
+.brandForm {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.formLabel {
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.formInput, .formTextarea {
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: #f9fafb;
+}
+
+.formInput:focus, .formTextarea:focus {
+  outline: none;
+  border-color: #667eea;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.formTextarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+.formFileInput {
+  padding: 12px 16px;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  background: #f9fafb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.formFileInput:hover {
+  border-color: #667eea;
+  background: #f0f4ff;
+}
+
+.fileInputInfo {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.formInfo {
+  font-size: 0.8rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Button Styles */
+.formActions {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-start;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btnPrimary, .btnSecondary, .btnEdit, .btnDelete {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btnPrimary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btnPrimary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.btnPrimary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btnSecondary {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.btnSecondary:hover {
+  background: #e5e7eb;
+}
+
+.loadingSpinner {
+  animation: spin 1s linear infinite;
+}
+
+/* Brands List Styles */
+.brandsListContainer {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+}
+
+.listHeader {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.loadingIndicator {
+  font-style: italic;
+}
+
+/* Empty State */
+.emptyState {
+  color: #6b7280;
+}
+
+.emptyIcon {
+  font-size: 4rem;
+  opacity: 0.5;
+}
+
+/* Brands Grid */
+.brandsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
+}
+
+.brandCard {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.brandCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border-color: #d1d5db;
+}
+
+.brandCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.brandLogo {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.brandLogoImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.brandLogoPlaceholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.brandInfo {
+  min-width: 0;
+}
+
+.brandName {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.brandId {
+  font-family: 'Monaco', 'Menlo', monospace;
+}
+
+.brandCardBody {
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.brandDetail {
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.brandDetail:last-child {
+  border-bottom: none;
+}
+
+.detailLabel {
+  color: #6b7280;
+}
+
+.detailValue {
+  color: #374151;
+  text-align: right;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.brandCardActions {
+  gap: 12px;
+}
+
+.btnEdit, .btnDelete {
+  flex: 1;
+  padding: 10px 16px;
+  font-size: 0.8rem;
+  border-radius: 6px;
+}
+
+.btnEdit {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fbbf24;
+}
+
+.btnEdit:hover:not(:disabled) {
+  background: #fde68a;
+  border-color: #f59e0b;
+}
+
+.btnDelete {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.btnDelete:hover:not(:disabled) {
+  background: #fecaca;
+  border-color: #ef4444;
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .brandsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .formActions {
+    flex-direction: column;
+  }
+  
+  .brandCardActions {
+    flex-direction: column;
+  }
+}
+
+.overflow-y-auto {
+  overflow: auto;
+}

@@ -56,7 +56,6 @@ body {
   width: 100vw;
   height: 100vh;
   position: relative;
-  line-height: 1;
   text-rendering: optimizeSpeed;
 }
 
@@ -173,87 +172,87 @@ textarea {
   }
 }
 /* Font Sizes */
-.fontSize10 {
+.font10 {
     font-size: calc(var(--font-scale, 1) * 10px);
     line-height: calc(var(--font-scale, 1) * 14px);
 }
-.fontSize12 {
+.font12 {
     font-size: calc(var(--font-scale, 1) * 12px);
     line-height: calc(var(--font-scale, 1) * 16px);
 }
-.fontSize14 {
+.font14 {
     font-size: calc(var(--font-scale, 1) * 14px);
     line-height: calc(var(--font-scale, 1) * 18px);
 }
-.fontSize16 {
+.font16 {
     font-size: calc(var(--font-scale, 1) * 16px);
     line-height: calc(var(--font-scale, 1) * 20px);
 }
-.fontSize18 {
+.font18 {
     font-size: calc(var(--font-scale, 1) * 18px);
     line-height: calc(var(--font-scale, 1) * 22px);
 }
-.fontSize20 {
+.font20 {
     font-size: calc(var(--font-scale, 1) * 20px);
     line-height: calc(var(--font-scale, 1) * 24px);
 }
-.fontSize22 {
+.font22 {
     font-size: calc(var(--font-scale, 1) * 22px);
     line-height: calc(var(--font-scale, 1) * 26px);
 }
-.fontSize24 {
+.font24 {
     font-size: calc(var(--font-scale, 1) * 24px);
     line-height: calc(var(--font-scale, 1) * 28px);
 }
-.fontSize26 {
+.font26 {
     font-size: calc(var(--font-scale, 1) * 26px);
     line-height: calc(var(--font-scale, 1) * 30px);
 }
-.fontSize28 {
+.font28 {
     font-size: calc(var(--font-scale, 1) * 28px);
     line-height: calc(var(--font-scale, 1) * 32px);
 }
-.fontSize30 {
+.font30 {
     font-size: calc(var(--font-scale, 1) * 30px);
     line-height: calc(var(--font-scale, 1) * 34px);
 }
-.fontSize32 {
+.font32 {
     font-size: calc(var(--font-scale, 1) * 32px);
     line-height: calc(var(--font-scale, 1) * 36px);
 }
-.fontSize34 {
+.font34 {
     font-size: calc(var(--font-scale, 1) * 34px);
     line-height: calc(var(--font-scale, 1) * 38px);
 }
-.fontSize36 {
+.font36 {
     font-size: calc(var(--font-scale, 1) * 36px);
     line-height: calc(var(--font-scale, 1) * 40px);
 }
-.fontSize38 {
+.font38 {
     font-size: calc(var(--font-scale, 1) * 38px);
     line-height: calc(var(--font-scale, 1) * 42px);
 }
-.fontSize40 {
+.font40 {
     font-size: calc(var(--font-scale, 1) * 40px);
     line-height: calc(var(--font-scale, 1) * 44px);
 }
-.fontSize42 {
+.font42 {
     font-size: calc(var(--font-scale, 1) * 42px);
     line-height: calc(var(--font-scale, 1) * 46px);
 }
-.fontSize44 {
+.font44 {
     font-size: calc(var(--font-scale, 1) * 44px);
     line-height: calc(var(--font-scale, 1) * 48px);
 }
-.fontSize46 {
+.font46 {
     font-size: calc(var(--font-scale, 1) * 46px);
     line-height: calc(var(--font-scale, 1) * 50px);
 }
-.fontSize48 {
+.font48 {
     font-size: calc(var(--font-scale, 1) * 48px);
     line-height: calc(var(--font-scale, 1) * 52px);
 }
-.fontSize50 {
+.font50 {
     font-size: calc(var(--font-scale, 1) * 50px);
     line-height: calc(var(--font-scale, 1) * 54px);
 }
@@ -409,8 +408,11 @@ textarea {
     display: block;
 }
 
+.flexOne {
+    flex:1;
+}
 /* Flex */
-.flex {
+.makeFlex {
     display: flex;
 }
 .makeFlex .flexOne {
@@ -431,8 +433,11 @@ textarea {
 .makeFlex .row {
     flex-direction: row;
 }
-.makeFlex .perfectCenter {
+.makeFlex.perfectCenter {
     justify-content: center;
+    align-items: center;
+}
+.makeFlex.alignCenter {
     align-items: center;
 }
 .makeFlex .spaceBetween {
@@ -456,7 +461,15 @@ textarea {
 .makeFlex .inlineFlex {
     display: inline-flex;
 }
-
+.makeFlex .justifyRight {
+    justify-self: flex-end;
+}
+.fullWidth {
+    width:100%;
+}
+.widthHalf {
+    width:50%;
+}
 /* Margins All */
 .appendAll2 {
     margin: 2px;
@@ -1250,8 +1263,10 @@ textarea {
 .marginAuto {
     margin: 0 auto;
 }
-
-.makeFlex {
-    display: flex;
+.gap4 {
+    gap: 10px;
+}
+.gap10 {
+    gap:10px;
 }
 

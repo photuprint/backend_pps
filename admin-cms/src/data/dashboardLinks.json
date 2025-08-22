@@ -1,0 +1,147 @@
+[
+    {
+      "id": 1,
+      "title": "Brand Manager",
+      "description": "Add/Edit/Delete Brand for the products",
+      "link": "/dashboard/addbrand",
+      "bgColor": "#007bff",
+      "icon": "MdAddAPhoto"
+    },
+    {
+      "id": 2,
+      "title": "Category Manager",
+      "description": "Add/Edit/Delete Category for the products",
+      "link": "/dashboard/addcategory",
+      "bgColor": "#007bff",
+      "icon": "MdAccessTime" 
+    },
+    {
+      "id": 15,
+      "title": "Sub Category Manager",
+      "description": "Add/Edit/Delete Sub Category for the products",
+      "link": "/dashboard/addsubcategory",
+      "bgColor": "#007bff",
+      "icon": "MdAccountBalanceWallet" 
+    },
+    {
+      "id": 19,
+      "title": "Product Manager",
+      "description": "Add/Edit/Delete products",
+      "link": "/dashboard/addproducts",
+      "bgColor": "#007bff",
+      "icon": "MdInfoOutline" 
+    },
+    {
+      "id": 3,
+      "title": "Collar Style Manager",
+      "description": "Add/Edit/Delete Collar for the products",
+      "link": "/dashboard/addcollarstyle",
+      "bgColor": "#007bff",
+      "icon": "MdAccountCircle" 
+    },
+    {
+      "id": 4,
+      "title": "Color Manager",
+      "description": "Add/Edit/Delete Color for the products",
+      "link": "/dashboard/addcolor",
+      "bgColor": "#007bff",
+      "icon": "MdAccountBox" 
+    },
+    {
+      "id": 5,
+      "title": "Country of Origin Manager",
+      "description": "Add/Edit/Delete Country of Origin for the products",
+      "link": "/dashboard/addcountryoforigin",
+      "bgColor": "#007bff",
+      "icon": "MdAdd" 
+    },
+    {
+      "id": 6,
+      "title": "Fit Type Manager",
+      "description": "Add/Edit/Delete Fit Type for the products",
+      "link": "/dashboard/addfittype",
+      "bgColor": "#007bff",
+      "icon": "MdAddCard" 
+    },
+    {
+      "id": 7,
+      "title": "Height Manager",
+      "description": "Add/Edit/Delete Height for the products",
+      "link": "/dashboard/addheight",
+      "bgColor": "#007bff",
+      "icon": "MdClose" 
+    },
+    {
+      "id": 8,
+      "title": "Length Manager",
+      "description": "Add/Edit/Delete Length for the products",
+      "link": "/dashboard/addlength",
+      "bgColor": "#007bff",
+      "icon": "MdDensitySmall" 
+    },
+    {
+      "id": 9,
+      "title": "Material Manager",
+      "description": "Add/Edit/Delete Material for the products",
+      "link": "/dashboard/addmaterial",
+      "bgColor": "#007bff",
+      "icon": "MdDelete" 
+    },
+    {
+      "id": 10,
+      "title": "Pattern Manager",
+      "description": "Add/Edit/Delete Pattern for the products",
+      "link": "/dashboard/addpattern",
+      "bgColor": "#007bff",
+      "icon": "MdDiscount" 
+    },
+    {
+      "id": 11,
+      "title": "Pincode Manager",
+      "description": "Add/Edit/Delete Pincode for the products",
+      "link": "/dashboard/addpincode",
+      "bgColor": "#007bff",
+      "icon": "MdDone" 
+    },
+    {
+      "id": 12,
+      "title": "Review Manager",
+      "description": "Add/Edit/Delete, approve and disapprove Review for the products",
+      "link": "/dashboard/reviewlist",
+      "bgColor": "#007bff",
+      "icon": "MdDownload" 
+    },
+    {
+      "id": 13,
+      "title": "Size Manager",
+      "description": "Add/Edit/Delete Size for the products",
+      "link": "/dashboard/addsize",
+      "bgColor": "#007bff",
+      "icon": "MdDownloadDone" 
+    },
+    {
+      "id": 14,
+      "title": "Sleeve Type Manager",
+      "description": "Add/Edit/Delete Sleeve Type for the products",
+      "link": "/dashboard/addsleevetype",
+      "bgColor": "#007bff",
+      "icon": "MdExpandLess" 
+    },
+    {
+      "id": 16,
+      "title": "Width Manager",
+      "description": "Add/Edit/Delete Width for the products",
+      "link": "/dashboard/addwidth",
+      "bgColor": "#007bff",
+      "icon": "MdExpandMore" 
+    },
+    {
+      "id": 17,
+      "title": "Coupons Manager",
+      "description": "Add/Edit/Delete Coupons for the products",
+      "link": "/dashboard/addcoupons",
+      "bgColor": "#007bff",
+      "icon": "MdFileUpload" 
+    }
+  ]
+  

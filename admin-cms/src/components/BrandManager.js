@@ -1,234 +1,357 @@
 import React, { useState, useEffect } from "react";
+import api from '../api/axios';
 
 const BrandManager = () => {
   const [brands, setBrands] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
-    brandId: "",
     name: "",
-    logo: "",
+    logo: null,
     gstNo: "",
     companyName: "",
     address: ""
   });
-  const [editingIndex, setEditingIndex] = useState(null);
 
   // Fetch brands from backend
+  const fetchBrands = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get('/brands');
+      setBrands(response.data);
+      setError("");
+    } catch (err) {
+      console.error("Error fetching brands:", err);
+      setError("Failed to fetch brands");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetch("/api/brands")
-      .then((res) => res.json())
-      .then((data) => setBrands(data))
-      .catch((err) => console.error("Error fetching brands:", err));
+    fetchBrands();
   }, []);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "logo") {
-      setFormData({ ...formData, logo: files[0] });
+      setFormData({ ...formData, logo: files[0] || null });
     } else {
       setFormData({ ...formData, [name]: value });
     }
   };
 
-  const handleAddOrUpdate = async () => {
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      logo: null,
+      gstNo: "",
+      companyName: "",
+      address: ""
+    });
+    setEditingId(null);
+    setError("");
+    setSuccess("");
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
     if (!formData.name.trim()) {
-      alert("Brand Name is required");
+      setError("Brand Name is required");
       return;
     }
 
-    const form = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      if (value) form.append(key, value);
-    });
-
     try {
-      let res;
-      if (editingIndex !== null) {
+      setLoading(true);
+      setError("");
+      setSuccess("");
+
+      // Prepare data for API (excluding logo for now, we'll handle file upload separately)
+      const brandData = {
+        name: formData.name.trim(),
+        gstNo: formData.gstNo.trim() || null,
+        companyName: formData.companyName.trim() || null,
+        address: formData.address.trim() || null
+      };
+
+      console.log('Sending brand data:', brandData);
+
+      let response;
+      if (editingId) {
         // Update brand
-        res = await fetch(`/api/brands/${brands[editingIndex]._id}`, {
-          method: "PUT",
-          body: form
-        });
+        response = await api.put(`/brands/${editingId}`, brandData);
+        setSuccess("Brand updated successfully!");
       } else {
-        // Add brand
-        res = await fetch("/api/brands", {
-          method: "POST",
-          body: form
-        });
+        // Create brand
+        response = await api.post('/brands', brandData);
+        setSuccess("Brand created successfully!");
       }
 
-      if (!res.ok) throw new Error("Failed to save brand");
-
-      const updatedBrand = await res.json();
-
-      if (editingIndex !== null) {
-        const updatedList = [...brands];
-        updatedList[editingIndex] = updatedBrand;
-        setBrands(updatedList);
-        setEditingIndex(null);
-      } else {
-        setBrands([...brands, updatedBrand]);
-      }
-
-      setFormData({
-        brandId: "",
-        name: "",
-        logo: "",
-        gstNo: "",
-        companyName: "",
-        address: ""
-      });
-    } catch (error) {
-      console.error(error);
-      alert("Error saving brand");
+      // Refresh brands list
+      await fetchBrands();
+      resetForm();
+      
+    } catch (err) {
+      console.error("Error saving brand:", err);
+      console.error("Error response:", err.response);
+      console.error("Error data:", err.response?.data);
+      console.error("Error status:", err.response?.status);
+      setError(err.response?.data?.msg || "Failed to save brand");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleEdit = (index) => {
-    const brand = brands[index];
+  const handleEdit = (brand) => {
     setFormData({
-      brandId: brand.brandId,
-      name: brand.name,
-      logo: "",
-      gstNo: brand.gstNo,
-      companyName: brand.companyName,
-      address: brand.address
+      name: brand.name || "",
+      logo: null,
+      gstNo: brand.gstNo || "",
+      companyName: brand.companyName || "",
+      address: brand.address || ""
     });
-    setEditingIndex(index);
+    setEditingId(brand._id);
+    setError("");
+    setSuccess("");
   };
 
-  const handleDelete = async (index) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this brand?");
-    if (!confirmDelete) return;
+  const handleDelete = async (brandId) => {
+    if (!window.confirm("Are you sure you want to delete this brand?")) {
+      return;
+    }
 
     try {
-      const res = await fetch(`/api/brands/${brands[index]._id}`, {
-        method: "DELETE"
-      });
-      if (!res.ok) throw new Error("Failed to delete brand");
-
-      setBrands(brands.filter((_, i) => i !== index));
-    } catch (error) {
-      console.error(error);
-      alert("Error deleting brand");
+      setLoading(true);
+      await api.delete(`/brands/${brandId}`);
+      setSuccess("Brand deleted successfully!");
+      await fetchBrands();
+    } catch (err) {
+      console.error("Error deleting brand:", err);
+      setError(err.response?.data?.msg || "Failed to delete brand");
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const handleCancel = () => {
+    resetForm();
   };
 
   return (
-    <div className="p-4 max-w-4xl mx-auto bg-white shadow-md rounded-lg">
-      <h2 className="text-xl font-bold mb-4">
-        {editingIndex !== null ? "Edit Brand" : "Add Brand"}
-      </h2>
-
-      {/* Brand Form */}
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <input
-          type="text"
-          name="brandId"
-          placeholder="Brand ID"
-          value={formData.brandId}
-          onChange={handleChange}
-          className="border p-2 rounded"
-        />
-        <input
-          type="text"
-          name="name"
-          placeholder="Brand Name"
-          value={formData.name}
-          onChange={handleChange}
-          className="border p-2 rounded"
-          required
-        />
-        <input
-          type="file"
-          name="logo"
-          accept="image/*"
-          onChange={handleChange}
-          className="border p-2 rounded"
-        />
-        <input
-          type="text"
-          name="gstNo"
-          placeholder="GST Number"
-          value={formData.gstNo}
-          onChange={handleChange}
-          className="border p-2 rounded"
-        />
-        <input
-          type="text"
-          name="companyName"
-          placeholder="Company Name"
-          value={formData.companyName}
-          onChange={handleChange}
-          className="border p-2 rounded"
-        />
-        <textarea
-          name="address"
-          placeholder="Company Address"
-          value={formData.address}
-          onChange={handleChange}
-          className="border p-2 rounded col-span-2"
-        />
+    <div className="paddingAll20">
+      {/* Header */}
+      <div className="textCenter paddingAll30 appendBottom40 brandHeader">
+        <h1 className="font48 fontBold whiteText appendBottom10">
+          {editingId ? "Edit Brand" : "Add New Brand"}
+        </h1>
+        <p className="font18 fontRegular whiteText">
+          Manage your brand information and company details
+        </p>
       </div>
 
-      <button
-        onClick={handleAddOrUpdate}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-      >
-        {editingIndex !== null ? "Update Brand" : "Add Brand"}
-      </button>
-
-      {/* Brand List */}
-      {brands.length > 0 && (
-        <table className="w-full border mt-6">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="p-2 border">Logo</th>
-              <th className="p-2 border">Brand ID</th>
-              <th className="p-2 border">Name</th>
-              <th className="p-2 border">GST No</th>
-              <th className="p-2 border">Company Name</th>
-              <th className="p-2 border">Address</th>
-              <th className="p-2 border">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {brands.map((brand, index) => (
-              <tr key={brand._id} className="text-center">
-                <td className="p-2 border">
-                  {brand.logo ? (
-                    <img
-                      src={brand.logo}
-                      alt={brand.name}
-                      className="w-10 h-10 object-cover mx-auto"
-                    />
-                  ) : (
-                    "-"
-                  )}
-                </td>
-                <td className="p-2 border">{brand.brandId || "-"}</td>
-                <td className="p-2 border">{brand.name}</td>
-                <td className="p-2 border">{brand.gstNo || "-"}</td>
-                <td className="p-2 border">{brand.companyName || "-"}</td>
-                <td className="p-2 border">{brand.address || "-"}</td>
-                <td className="p-2 border">
-                  <button
-                    onClick={() => handleEdit(index)}
-                    className="text-blue-500 hover:underline mr-2"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(index)}
-                    className="text-red-500 hover:underline"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {/* Success/Error Messages */}
+      {success && (
+        <div className="successMessage paddingAll16 appendBottom24">
+          <span className="successIcon">✓</span>
+          {success}
+        </div>
       )}
+      
+      {error && (
+        <div className="errorMessage paddingAll16 appendBottom24">
+          <span className="errorIcon">✕</span>
+          {error}
+        </div>
+      )}
+
+      {/* Brand Form */}
+      <div className="brandFormContainer paddingAll32 appendBottom40">
+        <form onSubmit={handleSubmit} className="brandForm">
+          <div className="makeFlex row gap10 appendBottom24">
+            <div className="fullWidth">
+              <label htmlFor="name" className="formLabel appendBottom8">Brand Name *</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter Brand Name"
+                value={formData.name}
+                onChange={handleChange}
+                className="formInput"
+                required
+              />
+              <div className="formInfo appendTop4">
+                Brand ID will be auto-generated (e.g., PPSBDNM1001, PPSBDNM1002)
+              </div>
+            </div>
+          </div>
+
+          <div className="makeFlex row gap10 appendBottom24">
+            <div className="flexOne">
+              <label htmlFor="gstNo" className="formLabel appendBottom8">GST Number</label>
+              <input
+                type="text"
+                id="gstNo"
+                name="gstNo"
+                placeholder="Enter GST Number"
+                value={formData.gstNo}
+                onChange={handleChange}
+                className="formInput"
+              />
+            </div>
+            
+            <div className="flexOne">
+              <label htmlFor="companyName" className="formLabel appendBottom8">Company Name</label>
+              <input
+                type="text"
+                id="companyName"
+                name="companyName"
+                placeholder="Enter Company Name"
+                value={formData.companyName}
+                onChange={handleChange}
+                className="formInput"
+              />
+            </div>
+          </div>
+
+          <div className="makeFlex row gap10 appendBottom24">
+            <div className="fullWidth">
+              <label htmlFor="logo" className="formLabel appendBottom8">Brand Logo</label>
+              <input
+                type="file"
+                id="logo"
+                name="logo"
+                accept="image/*"
+                onChange={handleChange}
+                className="formFileInput"
+              />
+              <div className="fileInputInfo appendTop4">
+                Supported formats: JPG, PNG, GIF (Max size: 5MB)
+              </div>
+            </div>
+          </div>
+
+          <div className="makeFlex row gap10 appendBottom24">
+            <div className="fullWidth">
+              <label htmlFor="address" className="formLabel appendBottom8">Company Address</label>
+              <textarea
+                id="address"
+                name="address"
+                placeholder="Enter Company Address"
+                value={formData.address}
+                onChange={handleChange}
+                className="formTextarea"
+                rows="3"
+              />
+            </div>
+          </div>
+
+          {/* Form Actions */}
+          <div className="formActions paddingTop16">
+            <button
+              type="submit"
+              disabled={loading}
+              className="btnPrimary"
+            >
+              {loading ? (
+                <span className="loadingSpinner">⏳</span>
+              ) : (
+                <span>{editingId ? "Update Brand" : "Create Brand"}</span>
+              )}
+            </button>
+            
+            {editingId && (
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="btnSecondary"
+              >
+                Cancel
+              </button>
+            )}
+          </div>
+        </form>
+      </div>
+
+      {/* Brands List */}
+      <div className="brandsListContainer paddingAll32">
+        <div className="listHeader makeFlex spaceBetween alignCenter appendBottom24">
+          <h2 className="listTitle font30 fontBold blackText">Brands ({brands.length})</h2>
+          {loading && <div className="loadingIndicator grayText">Loading...</div>}
+        </div>
+
+        {brands.length === 0 && !loading ? (
+          <div className="emptyState textCenter paddingAll60">
+            <div className="emptyIcon appendBottom16">🏢</div>
+            <h3 className="font22 fontSemiBold grayText appendBottom8">No Brands Found</h3>
+            <p className="font16 grayText">Start by adding your first brand above</p>
+          </div>
+        ) : (
+          <div className="brandsGrid">
+            {brands.map((brand) => (
+              <div key={brand._id} className="brandCard paddingAll24">
+                <div className="brandCardHeader makeFlex alignCenter gap10 appendBottom20">
+                  <div className="brandLogo">
+                    {brand.logo ? (
+                      <img
+                        src={brand.logo}
+                        alt={brand.name}
+                        className="brandLogoImage"
+                      />
+                    ) : (
+                      <div className="brandLogoPlaceholder">
+                        {brand.name.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                  <div className="brandInfo flexOne">
+                    <h3 className="brandName font20 fontBold blackText appendBottom4">{brand.name}</h3>
+                    <p className="brandId font14 grayText appendBottom4">ID: {brand.brandId}</p>
+                    {brand.companyName && (
+                      <p className="companyName font14 darkGrayText">{brand.companyName}</p>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="brandCardBody appendBottom20">
+                  {brand.gstNo && (
+                    <div className="brandDetail makeFlex spaceBetween alignCenter paddingTop8 paddingBottom8">
+                      <span className="detailLabel font14 fontSemiBold grayText textUppercase">GST:</span>
+                      <span className="detailValue font14 darkGrayText">{brand.gstNo}</span>
+                    </div>
+                  )}
+                  {brand.address && (
+                    <div className="brandDetail makeFlex spaceBetween alignCenter paddingTop8 paddingBottom8">
+                      <span className="detailLabel font14 fontSemiBold grayText textUppercase">Address:</span>
+                      <span className="detailValue font14 darkGrayText">{brand.address}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="brandCardActions makeFlex gap10">
+                  <button
+                    onClick={() => handleEdit(brand)}
+                    className="btnEdit flexOne"
+                    disabled={loading}
+                  >
+                    ✏️ Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(brand._id)}
+                    className="btnDelete flexOne"
+                    disabled={loading}
+                  >
+                    🗑️ Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

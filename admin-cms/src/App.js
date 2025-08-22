@@ -55,34 +55,68 @@ export default function App() {
     <AuthProvider>
       <Router>
         <Routes>
-        /* {/*  <Route path="/" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/status" element={<Status />} />
-          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-          <Route path="/products" element={<PrivateRoute><Products /></PrivateRoute>} /> */}   
-                    <Route path="/dashboard" element={<Dashboard />} />                    
-                    <Route path="/products" element={<Products />} />
-                    <Route path="/addcolor" element={<AddColor />} />
-                    <Route path="/addsize" element={<AddSize />} />
-                    <Route path="/addcategory" element={<AddCategory />} />
-                    <Route path="/addsubcategory" element={<AddSubcategory />} />
-                    <Route path="/addreview" element={<AddReviewManager />} />
-                    <Route path="/reviewlist" element={<ReviewList />} />
-                    <Route path="/addmaterial" element={<MaterialManager />} />
-                    <Route path="/addbrand" element={<BrandManager />} />
-                    <Route path="/addwidth" element={<WidthManager />} />
-                    <Route path="/addheight" element={<HeightManager />} />
-                    <Route path="/addlength" element={<LengthManager />} />
-                    <Route path="/addpattern" element={<PatternManager />} />
-                    <Route path="/addfittype" element={<FitTypeManager />} />
-                    <Route path="/addsleevetype" element={<SleeveTypeManager />} />
-                    <Route path="/addcollarstyle" element={<CollarStyleManager />} />
-                    <Route path="/addcountryoforigin" element={<CountryOfOriginManager />} />
-                    <Route path="/addpincode" element={<PinCodeManager />} />     
-                    <Route path="/addMedia" element={<ProductMediaUploader media={media} setMedia={setMedia} />} />  
-                              
 
+          {/* Dashboard Layout with Left & Right containers */}
+          <Route path="/dashboard/*" element={<PrivateRoute><Dashboard /></PrivateRoute>}>
+            <Route path="addproducts" element={<PrivateRoute><Products /></PrivateRoute>} />
+            <Route path="addcolor" element={<PrivateRoute><AddColor /></PrivateRoute>} />
+            <Route path="addsize" element={<PrivateRoute><AddSize /></PrivateRoute>} />
+            <Route path="addcategory" element={<PrivateRoute><AddCategory /></PrivateRoute>} />
+            <Route path="addsubcategory" element={<PrivateRoute><AddSubcategory /></PrivateRoute>} />
+            <Route path="addreview" element={<PrivateRoute><AddReviewManager /></PrivateRoute>} />
+            <Route path="reviewlist" element={<PrivateRoute><ReviewList /></PrivateRoute>} />
+            <Route path="addmaterial" element={<PrivateRoute><MaterialManager /></PrivateRoute>} />
+            <Route path="addbrand" element={<PrivateRoute><BrandManager /></PrivateRoute>} />
+            <Route path="addwidth" element={<PrivateRoute><WidthManager /></PrivateRoute>} />
+            <Route path="addheight" element={<PrivateRoute><HeightManager /></PrivateRoute>} />
+            <Route path="addlength" element={<PrivateRoute><LengthManager /></PrivateRoute>} />
+            <Route path="addpattern" element={<PrivateRoute><PatternManager /></PrivateRoute>} />
+            <Route path="addfittype" element={<PrivateRoute><FitTypeManager /></PrivateRoute>} />
+            <Route path="addsleevetype" element={<PrivateRoute><SleeveTypeManager /></PrivateRoute>} />
+            <Route path="addcollarstyle" element={<PrivateRoute><CollarStyleManager /></PrivateRoute>} />
+            <Route path="addcountryoforigin" element={<PrivateRoute><CountryOfOriginManager /></PrivateRoute>} />
+            <Route path="addpincode" element={<PrivateRoute><PinCodeManager /></PrivateRoute>} />
+            <Route
+              path="addMedia"
+              element={<PrivateRoute><ProductMediaUploader media={media} setMedia={setMedia} /></PrivateRoute>}
+            />
+          </Route>
         </Routes>
       </Router>
     </AuthProvider>
+    // <AuthProvider>
+    //   <Router>
+    //     <Routes>
+    //     /* {/*<Route path="/" element={<Login />} />
+    //       <Route path="/status" element={<Status />} />
+    //       <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+    //       <Route path="/products" element={<PrivateRoute><Products /></PrivateRoute>} />  */}  
+    //       <Route path="/dashboard" element={<Dashboard />}>
+    //         <Route path="addbrand" element={<BrandManager />} />
+    //         <Route path="products" element={<Products />} />
+    //         <Route path="addcolor" element={<AddColor />} />
+    //         <Route path="addsize" element={<AddSize />} />
+    //         <Route path="addcategory" element={<AddCategory />} />
+    //         <Route path="addsubcategory" element={<AddSubcategory />} />
+    //         <Route path="addreview" element={<AddReviewManager />} />
+    //         <Route path="reviewlist" element={<ReviewList />} />
+    //         <Route path="addmaterial" element={<MaterialManager />} />
+    //         <Route path="addbrand" element={<BrandManager />} />
+    //         <Route path="addwidth" element={<WidthManager />} />
+    //         <Route path="addheight" element={<HeightManager />} />
+    //         <Route path="addlength" element={<LengthManager />} />
+    //         <Route path="addpattern" element={<PatternManager />} />
+    //         <Route path="addfittype" element={<FitTypeManager />} />
+    //         <Route path="addsleevetype" element={<SleeveTypeManager />} />
+    //         <Route path="addcollarstyle" element={<CollarStyleManager />} />
+    //         <Route path="addcountryoforigin" element={<CountryOfOriginManager />} />
+    //         <Route path="addpincode" element={<PinCodeManager />} />     
+    //         <Route path="addMedia" element={<ProductMediaUploader media={media} setMedia={setMedia} />} />  
+    //       </Route>
+    //     </Routes>
+    //   </Router>
+    // </AuthProvider>
   );
 }
