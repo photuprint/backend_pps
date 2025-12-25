@@ -32,7 +32,6 @@ export default function Products() {
       setProducts(Array.isArray(productsData) ? productsData : []);
     } catch (err) {
       setError('Failed to fetch products');
-      console.error('Error fetching products:', err);
     } finally {
       setLoading(false);
     }

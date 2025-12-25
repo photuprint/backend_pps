@@ -3,8 +3,13 @@ import Color from '../models/color.model.js';
 // Get all colors
 export const getColors = async (req, res) => {
   try {
-    const { search, isActive } = req.query;
+    const { search, isActive, showDeleted } = req.query;
     let query = {};
+    
+    // By default, don't show deleted colors unless explicitly requested
+    if (showDeleted !== 'true') {
+      query.deleted = { $ne: true };
+    }
     
     if (isActive !== undefined) {
       query.isActive = isActive === 'true';
@@ -39,10 +44,14 @@ export const getColorById = async (req, res) => {
 // Create new color
 export const createColor = async (req, res) => {
   try {
-    const { name, hexCode } = req.body;
+    const { name, code, isActive } = req.body;
     
     if (!name || !name.trim()) {
       return res.status(400).json({ msg: 'Color name is required' });
+    }
+
+    if (!code || !code.trim()) {
+      return res.status(400).json({ msg: 'Color code is required' });
     }
 
     // Check if color with same name already exists
@@ -55,15 +64,17 @@ export const createColor = async (req, res) => {
     }
 
     // Handle image upload if present
-    let image = null;
+    let imageUrl = null;
     if (req.file) {
-      image = req.file.path; // You might want to upload to cloud storage instead
+      // For now, use local path. You might want to upload to cloud storage instead
+      imageUrl = `/uploads/${req.file.filename}`;
     }
 
     const color = new Color({
       name: name.trim(),
-      hexCode: hexCode?.trim() || null,
-      image
+      code: code.trim(),
+      image: imageUrl,
+      isActive: isActive === 'true' ? true : (isActive === true ? true : false)
     });
 
     const savedColor = await color.save();
@@ -77,7 +88,7 @@ export const createColor = async (req, res) => {
 // Update color
 export const updateColor = async (req, res) => {
   try {
-    const { name, hexCode } = req.body;
+    const { name, code, isActive } = req.body;
     
     // Check if color exists
     const color = await Color.findById(req.params.id);
@@ -101,7 +112,7 @@ export const updateColor = async (req, res) => {
 
     // Handle image upload if present
     if (req.file) {
-      color.image = req.file.path;
+      color.image = `/uploads/${req.file.filename}`;
     }
 
     // Update fields
@@ -109,8 +120,12 @@ export const updateColor = async (req, res) => {
       color.name = name.trim();
     }
     
-    if (hexCode !== undefined) {
-      color.hexCode = hexCode?.trim() || null;
+    if (code !== undefined) {
+      color.code = code.trim();
+    }
+
+    if (isActive !== undefined) {
+      color.isActive = isActive === 'true' ? true : (isActive === true ? true : false);
     }
 
     const updatedColor = await color.save();
@@ -129,10 +144,12 @@ export const deleteColor = async (req, res) => {
       return res.status(404).json({ msg: 'Color not found' });
     }
 
+    // Mark as deleted and inactive
     color.isActive = false;
+    color.deleted = true;
     await color.save();
     
-    res.json({ msg: 'Color deleted successfully' });
+    res.json({ msg: 'Color marked as deleted and inactive' });
   } catch (error) {
     console.error('Error deleting color:', error);
     res.status(500).json({ msg: 'Failed to delete color' });

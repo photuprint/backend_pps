@@ -30,7 +30,11 @@ const brandSchema = new mongoose.Schema({
   isActive: { 
     type: Boolean, 
     default: true 
-  }
+  },
+  deleted: { 
+    type: Boolean, 
+    default: false 
+  } // Add deleted field for soft delete
 }, { 
   timestamps: true 
 });

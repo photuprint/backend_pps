@@ -7,6 +7,7 @@ import {
   deleteMaterial, 
   hardDeleteMaterial 
 } from '../controllers/material.controller.js';
+import upload from '../middlewares/upload.middleware.js';
 
 const router = express.Router();
 
@@ -15,8 +16,8 @@ router.get('/', getMaterials);
 router.get('/:id', getMaterialById);
 
 // Protected routes (require authentication)
-router.post('/', createMaterial);
-router.put('/:id', updateMaterial);
+router.post('/', upload.single('image'), createMaterial);
+router.put('/:id', upload.single('image'), updateMaterial);
 router.delete('/:id', deleteMaterial);
 router.delete('/:id/hard', hardDeleteMaterial);
 

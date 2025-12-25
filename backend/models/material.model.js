@@ -18,6 +18,10 @@ const materialSchema = new mongoose.Schema({
     type: Boolean, 
     default: true 
   },
+  deleted: { 
+    type: Boolean, 
+    default: false 
+  }, // Add deleted field for soft delete
   properties: [{
     name: String,
     value: String
@@ -25,6 +29,10 @@ const materialSchema = new mongoose.Schema({
   category: { 
     type: String, 
     default: null 
+  },
+  type: {
+    type: String,
+    default: null
   }
 }, { 
   timestamps: true 

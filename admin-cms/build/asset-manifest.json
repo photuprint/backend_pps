@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/static/css/main.4f5cb9fb.css",
+    "main.js": "/static/js/main.6ea62228.js",
+    "static/media/Photu-Print-Logo-1.jpg": "/static/media/Photu-Print-Logo-1.5ea3109a07cbe81f0ae7.jpg",
+    "index.html": "/index.html",
+    "main.4f5cb9fb.css.map": "/static/css/main.4f5cb9fb.css.map",
+    "main.6ea62228.js.map": "/static/js/main.6ea62228.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4f5cb9fb.css",
+    "static/js/main.6ea62228.js"
+  ]
+}

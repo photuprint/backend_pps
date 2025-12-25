@@ -17,12 +17,11 @@ export default function Login() {
     setLoading(true);
     
     try {
-      console.log('Attempting login with:', { email, password });
       const res = await api.post('/auth/login', { email, password });
-      console.log('Login response:', res.data);
       
       if (res.data.user.role !== 'admin') {
         setError('Access denied. Only admins can log in.');
+        setLoading(false);
         return;
       }
       
@@ -30,7 +29,19 @@ export default function Login() {
       navigate('/dashboard');
     } catch (err) {
       console.error('Login error:', err);
-      setError(err.response?.data?.msg || 'Login failed. Please check your credentials.');
+      
+      // More detailed error handling
+      if (err.code === 'ECONNREFUSED' || err.message === 'Network Error') {
+        setError('Cannot connect to server. Please ensure the backend server is running on port 8080.');
+      } else if (err.response) {
+        // Server responded with error
+        setError(err.response.data?.msg || `Login failed: ${err.response.status} ${err.response.statusText}`);
+      } else if (err.request) {
+        // Request made but no response
+        setError('No response from server. Please check if the backend is running.');
+      } else {
+        setError(err.message || 'Login failed. Please check your credentials.');
+      }
     } finally {
       setLoading(false);
     }

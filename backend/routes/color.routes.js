@@ -7,6 +7,7 @@ import {
   deleteColor, 
   hardDeleteColor 
 } from '../controllers/color.controller.js';
+import upload from '../middlewares/upload.middleware.js';
 
 const router = express.Router();
 
@@ -15,8 +16,8 @@ router.get('/', getColors);
 router.get('/:id', getColorById);
 
 // Protected routes (require authentication)
-router.post('/', createColor);
-router.put('/:id', updateColor);
+router.post('/', upload.single('image'), createColor);
+router.put('/:id', upload.single('image'), updateColor);
 router.delete('/:id', deleteColor);
 router.delete('/:id/hard', hardDeleteColor);
 

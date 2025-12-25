@@ -3,15 +3,32 @@ import Material from '../models/material.model.js';
 // Get all materials
 export const getMaterials = async (req, res) => {
   try {
-    const { category, search } = req.query;
-    let query = { isActive: true };
+    const { search, isActive, includeDeleted = 'true', category, type } = req.query;
+    let query = {};
+    
+    // Always include deleted materials by default, but allow filtering
+    if (includeDeleted === 'false') {
+      query.deleted = false;
+    }
+    
+    if (isActive !== undefined) {
+      query.isActive = isActive === 'true';
+    }
     
     if (category) {
       query.category = category;
     }
     
+    if (type) {
+      query.type = type;
+    }
+    
     if (search) {
-      query.name = { $regex: search, $options: 'i' };
+      query.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { type: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } }
+      ];
     }
     
     const materials = await Material.find(query).sort({ createdAt: -1 });
@@ -39,71 +56,160 @@ export const getMaterialById = async (req, res) => {
 // Create new material
 export const createMaterial = async (req, res) => {
   try {
-    const { name, description, category, properties } = req.body;
+    const { name, type, description, category, properties } = req.body;
+    let { isActive = true } = req.body;
     
-    // Check if material with same name already exists
-    const existingMaterial = await Material.findOne({ name: name });
+    // Convert string "true"/"false" to boolean (for FormData)
+    if (typeof isActive === 'string') {
+      isActive = isActive === 'true';
+    }
+    
+    if (!name || !name.trim()) {
+      return res.status(400).json({ msg: 'Material name is required' });
+    }
+
+    if (!type || !type.trim()) {
+      return res.status(400).json({ msg: 'Material type is required' });
+    }
+
+    // Check for duplicate names (case-insensitive)
+    const existingMaterial = await Material.findOne({ 
+      name: { $regex: new RegExp(`^${name.trim()}$`, 'i') },
+      deleted: false
+    });
+    
     if (existingMaterial) {
       return res.status(400).json({ msg: 'Material name already exists' });
     }
 
-    // Handle image upload if present
-    let image = null;
+    // Handle image upload
+    let imageUrl = null;
     if (req.file) {
-      image = req.file.path; // You might want to upload to cloud storage instead
+      try {
+        // Upload to Cloudinary
+        const cloudinary = (await import('../utils/cloudinary.js')).default;
+        const result = await cloudinary.uploader.upload(req.file.path, {
+          folder: 'photuprint/materials',
+        });
+        imageUrl = result.secure_url;
+        console.log('Image uploaded to Cloudinary:', imageUrl);
+      } catch (uploadError) {
+        console.error('Cloudinary upload failed:', uploadError);
+        // Fallback to local storage
+        imageUrl = `/uploads/${req.file.filename}`;
+      }
     }
 
     const material = new Material({
-      name,
-      description,
-      image,
-      category,
-      properties: properties ? JSON.parse(properties) : []
+      name: name.trim(),
+      type: type.trim(),
+      description: description?.trim() || null,
+      image: imageUrl,
+      category: category?.trim() || null,
+      properties: properties ? (typeof properties === 'string' ? JSON.parse(properties) : properties) : [],
+      isActive
     });
 
     const savedMaterial = await material.save();
     res.status(201).json(savedMaterial);
   } catch (error) {
     console.error('Error creating material:', error);
-    res.status(500).json({ msg: 'Failed to create material' });
+    if (error.code === 11000) {
+      res.status(400).json({ msg: 'Material name already exists' });
+    } else {
+      res.status(500).json({ msg: 'Failed to create material' });
+    }
   }
 };
 
 // Update material
 export const updateMaterial = async (req, res) => {
   try {
-    const { name, description, category, properties } = req.body;
+    const { name, type, description, category, properties } = req.body;
+    let { isActive, deleted } = req.body;
     
-    // Check if material exists
+    // Convert string "true"/"false" to boolean (for FormData)
+    if (typeof isActive === 'string') {
+      isActive = isActive === 'true';
+    }
+    if (typeof deleted === 'string') {
+      deleted = deleted === 'true';
+    }
+    
     const material = await Material.findById(req.params.id);
     if (!material) {
       return res.status(404).json({ msg: 'Material not found' });
     }
 
-    // Check for duplicate names (excluding current material)
-    if (name && name !== material.name) {
-      const existingMaterial = await Material.findOne({ name: name });
+    // Check for duplicate names (case-insensitive) if name is being changed
+    if (name && name.trim() !== material.name) {
+      const existingMaterial = await Material.findOne({ 
+        name: { $regex: new RegExp(`^${name.trim()}$`, 'i') },
+        _id: { $ne: req.params.id },
+        deleted: false
+      });
+      
       if (existingMaterial) {
         return res.status(400).json({ msg: 'Material name already exists' });
       }
     }
 
-    // Handle image upload if present
-    if (req.file) {
-      material.image = req.file.path;
+    // Update fields
+    if (name && name.trim() !== material.name) {
+      material.name = name.trim();
+    }
+    
+    if (type && type.trim() !== material.type) {
+      material.type = type.trim();
+    }
+    
+    if (description !== undefined) {
+      material.description = description?.trim() || null;
+    }
+    
+    if (category !== undefined) {
+      material.category = category?.trim() || null;
+    }
+    
+    if (properties !== undefined) {
+      material.properties = typeof properties === 'string' ? JSON.parse(properties) : properties;
+    }
+    
+    if (isActive !== undefined) {
+      material.isActive = isActive;
     }
 
-    // Update fields
-    material.name = name || material.name;
-    material.description = description !== undefined ? description : material.description;
-    material.category = category || material.category;
-    material.properties = properties ? JSON.parse(properties) : material.properties;
+    // Handle deleted field update (for reverting deleted materials)
+    if (req.body.deleted !== undefined) {
+      material.deleted = deleted;
+    }
+
+    // Handle image upload
+    if (req.file) {
+      try {
+        // Upload to Cloudinary
+        const cloudinary = (await import('../utils/cloudinary.js')).default;
+        const result = await cloudinary.uploader.upload(req.file.path, {
+          folder: 'photuprint/materials',
+        });
+        material.image = result.secure_url;
+        console.log('Image updated in Cloudinary:', material.image);
+      } catch (uploadError) {
+        console.error('Cloudinary upload failed:', uploadError);
+        // Fallback to local storage
+        material.image = `/uploads/${req.file.filename}`;
+      }
+    }
 
     const updatedMaterial = await material.save();
     res.json(updatedMaterial);
   } catch (error) {
     console.error('Error updating material:', error);
-    res.status(500).json({ msg: 'Failed to update material' });
+    if (error.code === 11000) {
+      res.status(400).json({ msg: 'Material name already exists' });
+    } else {
+      res.status(500).json({ msg: 'Failed to update material' });
+    }
   }
 };
 
@@ -115,7 +221,9 @@ export const deleteMaterial = async (req, res) => {
       return res.status(404).json({ msg: 'Material not found' });
     }
 
+    // Soft delete: mark as inactive and set deleted flag
     material.isActive = false;
+    material.deleted = true;
     await material.save();
     
     res.json({ msg: 'Material deleted successfully' });

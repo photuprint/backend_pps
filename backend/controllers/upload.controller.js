@@ -1,12 +1,22 @@
-const cloudinary = require('../utils/cloudinary');
+import cloudinary from '../utils/cloudinary.js';
 
-exports.uploadImage = async (req, res) => {
+export const uploadImage = async (req, res) => {
   try {
+    if (!req.file) {
+      return res.status(400).json({ msg: 'No file uploaded' });
+    }
+
     const result = await cloudinary.uploader.upload(req.file.path, {
       folder: 'photuprint',
     });
-    res.json({ url: result.secure_url, public_id: result.public_id });
+
+    res.json({ 
+      url: result.secure_url, 
+      public_id: result.public_id,
+      filename: req.file.filename 
+    });
   } catch (err) {
-    res.status(500).json({ msg: err.message });
+    console.error('Upload error:', err);
+    res.status(500).json({ msg: err.message || 'Failed to upload image' });
   }
 };

@@ -2,8 +2,12 @@ import mongoose from 'mongoose';
 
 const sizeSchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
-  dimensions: String, // Optional, like "10x10"
-  isActive: { type: Boolean, default: true }
+  initial: { type: String, default: null }, // Optional, like "S", "M", "L"
+  dimensions: { type: String, default: null }, // Optional, like "10x10"
+  description: { type: String, default: null },
+  image: { type: String, default: null },
+  isActive: { type: Boolean, default: true },
+  deleted: { type: Boolean, default: false } // Add deleted field for soft delete
 }, { 
   timestamps: true 
 });
